@@ -309,7 +309,6 @@ impl Object {
             }
         // 8
         } else {
-
         }
         true
     }

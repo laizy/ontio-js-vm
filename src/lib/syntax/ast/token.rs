@@ -53,7 +53,7 @@ pub enum TokenData {
     /// A `null` literal
     NullLiteral,
     /// A numeric literal
-    NumericLiteral(f64),
+    NumericLiteral(i64),
     /// A piece of punctuation
     Punctuator(Punctuator),
     /// A string literal

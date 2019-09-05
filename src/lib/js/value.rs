@@ -5,11 +5,10 @@ use crate::js::{
 };
 use gc::{Gc, GcCell};
 use gc_derive::{Finalize, Trace};
-use serde_json::{map::Map, Number as JSONNumber, Value as JSONValue};
 use std::{
     any::Any,
-    f64::NAN,
     fmt::{self, Display},
+    i64,
     ops::{Add, BitAnd, BitOr, BitXor, Deref, DerefMut, Div, Mul, Not, Rem, Shl, Shr, Sub},
     str::FromStr,
 };
@@ -36,7 +35,7 @@ pub enum ValueData {
     /// `String` - A UTF-8 string, such as `"Hello, world"`
     String(String),
     /// `Number` - A 64-bit floating point number, such as `3.1415`
-    Number(f64),
+    Number(i64),
     /// `Number` - A 32-bit integer, such as `42`
     Integer(i32),
     /// `Object` - An object, such as `Math`, represented by a binary tree of string keys to Javascript values
@@ -144,7 +143,7 @@ impl ValueData {
         match *self {
             ValueData::Object(_) => true,
             ValueData::String(ref s) if !s.is_empty() => true,
-            ValueData::Number(n) if n != 0.0 && !n.is_nan() => true,
+            ValueData::Number(n) => n != 0,
             ValueData::Integer(n) if n != 0 => true,
             ValueData::Boolean(v) => v,
             _ => false,
@@ -152,17 +151,17 @@ impl ValueData {
     }
 
     /// Converts the value into a 64-bit floating point number
-    pub fn to_num(&self) -> f64 {
+    pub fn to_num(&self) -> i64 {
         match *self {
-            ValueData::Object(_) | ValueData::Undefined | ValueData::Function(_) => NAN,
+            ValueData::Object(_) | ValueData::Undefined | ValueData::Function(_) => i64::MAX,
             ValueData::String(ref str) => match FromStr::from_str(str) {
                 Ok(num) => num,
-                Err(_) => NAN,
+                Err(_) => i64::MAX,
             },
             ValueData::Number(num) => num,
-            ValueData::Boolean(true) => 1.0,
-            ValueData::Boolean(false) | ValueData::Null => 0.0,
-            ValueData::Integer(num) => f64::from(num),
+            ValueData::Boolean(true) => 1,
+            ValueData::Boolean(false) | ValueData::Null => 0,
+            ValueData::Integer(num) => num as i64,
         }
     }
 
@@ -469,60 +468,6 @@ impl ValueData {
         }
     }
 
-    /// Convert from a JSON value to a JS value
-    pub fn from_json(json: JSONValue) -> Self {
-        match json {
-            JSONValue::Number(v) => ValueData::Number(v.as_f64().unwrap()),
-            JSONValue::String(v) => ValueData::String(v),
-            JSONValue::Bool(v) => ValueData::Boolean(v),
-            JSONValue::Array(vs) => {
-                let mut new_obj = Object::default();
-                for (idx, json) in vs.iter().enumerate() {
-                    new_obj.properties.insert(
-                        idx.to_string(),
-                        Property::default().value(to_value(json.clone())),
-                    );
-                }
-                new_obj.properties.insert(
-                    "length".to_string(),
-                    Property::default().value(to_value(vs.len() as i32)),
-                );
-                ValueData::Object(GcCell::new(new_obj))
-            }
-            JSONValue::Object(obj) => {
-                let mut new_obj = Object::default();
-                for (key, json) in obj.iter() {
-                    new_obj.properties.insert(
-                        key.clone(),
-                        Property::default().value(to_value(json.clone())),
-                    );
-                }
-
-                ValueData::Object(GcCell::new(new_obj))
-            }
-            JSONValue::Null => ValueData::Null,
-        }
-    }
-
-    pub fn to_json(&self) -> JSONValue {
-        match *self {
-            ValueData::Null | ValueData::Undefined | ValueData::Function(_) => JSONValue::Null,
-            ValueData::Boolean(b) => JSONValue::Bool(b),
-            ValueData::Object(ref obj) => {
-                let mut new_obj = Map::new();
-                for (k, v) in obj.borrow().internal_slots.iter() {
-                    if k != INSTANCE_PROTOTYPE {
-                        new_obj.insert(k.clone(), v.to_json());
-                    }
-                }
-                JSONValue::Object(new_obj)
-            }
-            ValueData::String(ref str) => JSONValue::String(str.clone()),
-            ValueData::Number(num) => JSONValue::Number(JSONNumber::from_f64(num).unwrap()),
-            ValueData::Integer(val) => JSONValue::Number(JSONNumber::from(val)),
-        }
-    }
-
     /// Get the type of the value
     pub fn get_type(&self) -> &'static str {
         match *self {
@@ -549,16 +494,7 @@ impl Display for ValueData {
             ValueData::Undefined => write!(f, "undefined"),
             ValueData::Boolean(v) => write!(f, "{}", v),
             ValueData::String(ref v) => write!(f, "{}", v),
-            ValueData::Number(v) => write!(
-                f,
-                "{}",
-                match v {
-                    _ if v.is_nan() => "NaN".to_string(),
-                    _ if v.is_infinite() && v.is_sign_negative() => "-Infinity".to_string(),
-                    _ if v.is_infinite() => "Infinity".to_string(),
-                    _ => v.to_string(),
-                }
-            ),
+            ValueData::Number(v) => write!(f, "{}", v),
             ValueData::Object(ref v) => {
                 write!(f, "{{")?;
                 // Print public properties
@@ -611,11 +547,7 @@ impl PartialEq for ValueData {
                 self.to_string() == other.to_string()
             }
             (ValueData::Boolean(a), ValueData::Boolean(b)) if a == b => true,
-            (ValueData::Number(a), ValueData::Number(b))
-                if a == b && !a.is_nan() && !b.is_nan() =>
-            {
-                true
-            }
+            (ValueData::Number(a), ValueData::Number(b)) if a == b => true,
             (ValueData::Number(a), _) if a == other.to_num() => true,
             (_, ValueData::Number(a)) if a == self.to_num() => true,
             (ValueData::Integer(a), ValueData::Integer(b)) if a == b => true,
@@ -749,12 +681,12 @@ impl FromValue for char {
     }
 }
 
-impl ToValue for f64 {
+impl ToValue for i64 {
     fn to_value(&self) -> Value {
         Gc::new(ValueData::Number(*self))
     }
 }
-impl FromValue for f64 {
+impl FromValue for i64 {
     fn from_value(v: Value) -> Result<Self, &'static str> {
         Ok(v.to_num())
     }
@@ -844,18 +776,6 @@ impl FromValue for Object {
     }
 }
 
-impl ToValue for JSONValue {
-    fn to_value(&self) -> Value {
-        Gc::new(ValueData::from_json(self.clone()))
-    }
-}
-
-impl FromValue for JSONValue {
-    fn from_value(v: Value) -> Result<Self, &'static str> {
-        Ok(v.to_json())
-    }
-}
-
 impl ToValue for () {
     fn to_value(&self) -> Value {
         Gc::new(ValueData::Null)
@@ -925,9 +845,9 @@ pub fn same_value(x: &Value, y: &Value) -> bool {
     }
 
     if x.get_type() == "number" {
-        let native_x: f64 = from_value(x.clone()).expect("failed to get value");
-        let native_y: f64 = from_value(y.clone()).expect("failed to get value");
-        return native_x.abs() - native_y.abs() == 0.0;
+        let native_x: i64 = from_value(x.clone()).expect("failed to get value");
+        let native_y: i64 = from_value(y.clone()).expect("failed to get value");
+        return native_x == native_y;
     }
 
     same_value_non_number(x, y)

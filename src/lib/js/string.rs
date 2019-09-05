@@ -8,10 +8,7 @@ use crate::{
     },
 };
 use gc::Gc;
-use std::{
-    cmp::{max, min},
-    f64::NAN,
-};
+use std::cmp::{max, min};
 
 /// Create new string
 /// <https://searchfox.org/mozilla-central/source/js/src/vm/StringObject.h#19>
@@ -101,7 +98,7 @@ pub fn char_code_at(this: &Value, args: &[Value], ctx: &mut Interpreter) -> Resu
     .expect("failed to parse argument for String method");
 
     if pos >= length as i32 || pos < 0 {
-        return Ok(to_value(NAN));
+        return Ok(to_value(std::i64::MAX));
     }
 
     let utf16_val = primitive_val
@@ -110,7 +107,7 @@ pub fn char_code_at(this: &Value, args: &[Value], ctx: &mut Interpreter) -> Resu
         .expect("failed to get utf16 value");
     // If there is no element at that index, the result is NaN
     // TODO: We currently don't have NaN
-    Ok(to_value(f64::from(utf16_val)))
+    Ok(to_value(i64::from(utf16_val)))
 }
 
 /// Returns a String that is the result of concatenating this String and all strings provided as

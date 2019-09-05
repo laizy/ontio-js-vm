@@ -7,7 +7,7 @@ pub enum Const {
     /// A UTF-8 string, such as `"Hello, world"`
     String(String),
     // A 64-bit floating-point number, such as `3.1415`
-    Num(f64),
+    Num(i64),
     // A 32-bit integer, such as `42`
     Int(i32),
     // A boolean, which is either `true` or `false` and is used to check if criteria are met

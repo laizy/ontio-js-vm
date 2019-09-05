@@ -43,7 +43,12 @@ use crate::{
     syntax::{ast::expr::Expr, lexer::Lexer, parser::Parser},
 };
 
-use ontio_std::console;
+use ontio_std::{
+    abi::{Sink, ZeroCopySource},
+    console,
+    prelude::*,
+    runtime,
+};
 
 fn parser_expr(src: &str) -> Expr {
     let mut lexer = Lexer::new(src);
@@ -68,6 +73,34 @@ pub fn forward(engine: &mut Interpreter, src: &str) -> String {
 pub fn exec(src: &str) -> String {
     let mut engine: Interpreter = Executor::new();
     forward(&mut engine, src)
+}
+
+#[no_mangle]
+pub fn invoke() {
+    let input = runtime::input();
+    let mut source = ZeroCopySource::new(&input);
+    let action: &[u8] = source.read().unwrap();
+    let mut sink = Sink::new(12);
+    match action {
+        b"evaluate" => {
+            let js = source.read().unwrap();
+            sink.write(evaluate(js))
+        }
+        b"testcase" => sink.write(testcase()),
+        _ => panic!("unsupported action!"),
+    }
+
+    runtime::ret(sink.bytes())
+}
+
+fn testcase() -> String {
+    r#"
+    [
+        [{"method":"evaluate", "param":"string:1+2", "expected":"string:3"},
+        ]
+    ]
+        "#
+    .to_string()
 }
 
 #[no_mangle]

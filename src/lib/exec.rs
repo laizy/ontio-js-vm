@@ -3,7 +3,7 @@ use crate::{
     js::{
         array, console, function,
         function::{Function, RegularFunction},
-        json, math, object,
+        object,
         object::{ObjectKind, INSTANCE_PROTOTYPE, PROTOTYPE},
         regexp, string,
         value::{from_value, to_value, ResultValue, Value, ValueData},
@@ -385,11 +385,11 @@ impl InterpreterBuilder {
         let global = ValueData::new_obj(None);
         object::init(&global);
         console::init(&global);
-        math::init(&global);
+        //        math::init(&global);
         array::init(&global);
         function::init(&global);
-        json::init(&global);
-//        regexp::init(&global);
+        //        json::init(&global);
+        //        regexp::init(&global);
         string::init(&global);
 
         Self { global }

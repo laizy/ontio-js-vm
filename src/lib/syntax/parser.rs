@@ -864,9 +864,9 @@ mod tests {
         check_parser(
             "[1, 2, 3]",
             &[Expr::new(ExprDef::ArrayDecl(vec![
-                Expr::new(ExprDef::Const(Const::Num(1.0))),
-                Expr::new(ExprDef::Const(Const::Num(2.0))),
-                Expr::new(ExprDef::Const(Const::Num(3.0))),
+                Expr::new(ExprDef::Const(Const::Num(1))),
+                Expr::new(ExprDef::Const(Const::Num(2))),
+                Expr::new(ExprDef::Const(Const::Num(3))),
             ]))],
         );
 
@@ -874,9 +874,9 @@ mod tests {
         check_parser(
             "[1, 2, 3,]",
             &[Expr::new(ExprDef::ArrayDecl(vec![
-                Expr::new(ExprDef::Const(Const::Num(1.0))),
-                Expr::new(ExprDef::Const(Const::Num(2.0))),
-                Expr::new(ExprDef::Const(Const::Num(3.0))),
+                Expr::new(ExprDef::Const(Const::Num(1))),
+                Expr::new(ExprDef::Const(Const::Num(2))),
+                Expr::new(ExprDef::Const(Const::Num(3))),
             ]))],
         );
 
@@ -884,10 +884,10 @@ mod tests {
         check_parser(
             "[1, 2, , 3]",
             &[Expr::new(ExprDef::ArrayDecl(vec![
-                Expr::new(ExprDef::Const(Const::Num(1.0))),
-                Expr::new(ExprDef::Const(Const::Num(2.0))),
+                Expr::new(ExprDef::Const(Const::Num(1))),
+                Expr::new(ExprDef::Const(Const::Num(2))),
                 Expr::new(ExprDef::Const(Const::Undefined)),
-                Expr::new(ExprDef::Const(Const::Num(3.0))),
+                Expr::new(ExprDef::Const(Const::Num(3))),
             ]))],
         );
 
@@ -895,11 +895,11 @@ mod tests {
         check_parser(
             "[1, 2, ,, 3]",
             &[Expr::new(ExprDef::ArrayDecl(vec![
-                Expr::new(ExprDef::Const(Const::Num(1.0))),
-                Expr::new(ExprDef::Const(Const::Num(2.0))),
+                Expr::new(ExprDef::Const(Const::Num(1))),
+                Expr::new(ExprDef::Const(Const::Num(2))),
                 Expr::new(ExprDef::Const(Const::Undefined)),
                 Expr::new(ExprDef::Const(Const::Undefined)),
-                Expr::new(ExprDef::Const(Const::Num(3.0))),
+                Expr::new(ExprDef::Const(Const::Num(3))),
             ]))],
         );
 
@@ -907,9 +907,9 @@ mod tests {
         check_parser(
             "[1, \"a\", 2]",
             &[Expr::new(ExprDef::ArrayDecl(vec![
-                Expr::new(ExprDef::Const(Const::Num(1.0))),
+                Expr::new(ExprDef::Const(Const::Num(1))),
                 Expr::new(ExprDef::Const(Const::String(String::from("a")))),
-                Expr::new(ExprDef::Const(Const::Num(2.0))),
+                Expr::new(ExprDef::Const(Const::Num(2))),
             ]))],
         );
 
@@ -917,9 +917,9 @@ mod tests {
         check_parser(
             "[1, \"\", 2]",
             &[Expr::new(ExprDef::ArrayDecl(vec![
-                Expr::new(ExprDef::Const(Const::Num(1.0))),
+                Expr::new(ExprDef::Const(Const::Num(1))),
                 Expr::new(ExprDef::Const(Const::String(String::new()))),
-                Expr::new(ExprDef::Const(Const::Num(2.0))),
+                Expr::new(ExprDef::Const(Const::Num(2))),
             ]))],
         );
     }
@@ -933,7 +933,7 @@ mod tests {
             "var a = 5;",
             &[Expr::new(ExprDef::VarDecl(vec![(
                 String::from("a"),
-                Some(Expr::new(ExprDef::Const(Const::Num(5.0)))),
+                Some(Expr::new(ExprDef::Const(Const::Num(5)))),
             )]))],
         );
 
@@ -942,7 +942,7 @@ mod tests {
             "var a=5;",
             &[Expr::new(ExprDef::VarDecl(vec![(
                 String::from("a"),
-                Some(Expr::new(ExprDef::Const(Const::Num(5.0)))),
+                Some(Expr::new(ExprDef::Const(Const::Num(5)))),
             )]))],
         );
 
@@ -958,12 +958,12 @@ mod tests {
             &[Expr::new(ExprDef::VarDecl(vec![
                 (
                     String::from("a"),
-                    Some(Expr::new(ExprDef::Const(Const::Num(5.0)))),
+                    Some(Expr::new(ExprDef::Const(Const::Num(5)))),
                 ),
                 (String::from("b"), None),
                 (
                     String::from("c"),
-                    Some(Expr::new(ExprDef::Const(Const::Num(6.0)))),
+                    Some(Expr::new(ExprDef::Const(Const::Num(6)))),
                 ),
             ]))],
         );
@@ -973,7 +973,7 @@ mod tests {
             "let a = 5;",
             &[Expr::new(ExprDef::LetDecl(vec![(
                 String::from("a"),
-                Some(Expr::new(ExprDef::Const(Const::Num(5.0)))),
+                Some(Expr::new(ExprDef::Const(Const::Num(5)))),
             )]))],
         );
 
@@ -982,7 +982,7 @@ mod tests {
             "let a=5;",
             &[Expr::new(ExprDef::LetDecl(vec![(
                 String::from("a"),
-                Some(Expr::new(ExprDef::Const(Const::Num(5.0)))),
+                Some(Expr::new(ExprDef::Const(Const::Num(5)))),
             )]))],
         );
 
@@ -998,12 +998,12 @@ mod tests {
             &[Expr::new(ExprDef::LetDecl(vec![
                 (
                     String::from("a"),
-                    Some(Expr::new(ExprDef::Const(Const::Num(5.0)))),
+                    Some(Expr::new(ExprDef::Const(Const::Num(5)))),
                 ),
                 (String::from("b"), None),
                 (
                     String::from("c"),
-                    Some(Expr::new(ExprDef::Const(Const::Num(6.0)))),
+                    Some(Expr::new(ExprDef::Const(Const::Num(6)))),
                 ),
             ]))],
         );
@@ -1013,7 +1013,7 @@ mod tests {
             "const a = 5;",
             &[Expr::new(ExprDef::ConstDecl(vec![(
                 String::from("a"),
-                Expr::new(ExprDef::Const(Const::Num(5.0))),
+                Expr::new(ExprDef::Const(Const::Num(5))),
             )]))],
         );
 
@@ -1022,7 +1022,7 @@ mod tests {
             "const a=5;",
             &[Expr::new(ExprDef::ConstDecl(vec![(
                 String::from("a"),
-                Expr::new(ExprDef::Const(Const::Num(5.0))),
+                Expr::new(ExprDef::Const(Const::Num(5))),
             )]))],
         );
 
@@ -1033,14 +1033,8 @@ mod tests {
         check_parser(
             "const a = 5, c = 6;",
             &[Expr::new(ExprDef::ConstDecl(vec![
-                (
-                    String::from("a"),
-                    Expr::new(ExprDef::Const(Const::Num(5.0))),
-                ),
-                (
-                    String::from("c"),
-                    Expr::new(ExprDef::Const(Const::Num(6.0))),
-                ),
+                (String::from("a"), Expr::new(ExprDef::Const(Const::Num(5)))),
+                (String::from("c"), Expr::new(ExprDef::Const(Const::Num(6)))),
             ]))],
         );
     }
@@ -1067,7 +1061,7 @@ mod tests {
             &[create_bin_op(
                 BinOp::Num(NumOp::Add),
                 Expr::new(ExprDef::Local(String::from("a"))),
-                Expr::new(ExprDef::Const(Const::Num(1.0))),
+                Expr::new(ExprDef::Const(Const::Num(1))),
             )],
         );
         check_parser(
@@ -1083,7 +1077,7 @@ mod tests {
             &[create_bin_op(
                 BinOp::Num(NumOp::Sub),
                 Expr::new(ExprDef::Local(String::from("a"))),
-                Expr::new(ExprDef::Const(Const::Num(1.0))),
+                Expr::new(ExprDef::Const(Const::Num(1))),
             )],
         );
         check_parser(
@@ -1099,7 +1093,7 @@ mod tests {
             &[create_bin_op(
                 BinOp::Num(NumOp::Div),
                 Expr::new(ExprDef::Local(String::from("a"))),
-                Expr::new(ExprDef::Const(Const::Num(2.0))),
+                Expr::new(ExprDef::Const(Const::Num(2))),
             )],
         );
         check_parser(
@@ -1115,7 +1109,7 @@ mod tests {
             &[create_bin_op(
                 BinOp::Num(NumOp::Mul),
                 Expr::new(ExprDef::Local(String::from("a"))),
-                Expr::new(ExprDef::Const(Const::Num(2.0))),
+                Expr::new(ExprDef::Const(Const::Num(2))),
             )],
         );
         check_parser(
@@ -1131,7 +1125,7 @@ mod tests {
             &[create_bin_op(
                 BinOp::Num(NumOp::Mod),
                 Expr::new(ExprDef::Local(String::from("a"))),
-                Expr::new(ExprDef::Const(Const::Num(2.0))),
+                Expr::new(ExprDef::Const(Const::Num(2))),
             )],
         );
 
@@ -1144,14 +1138,14 @@ mod tests {
                 create_bin_op(
                     BinOp::Num(NumOp::Add),
                     // FIXME: shouldn't the last addition be on the right?
-                    Expr::new(ExprDef::Const(Const::Num(1.0))),
+                    Expr::new(ExprDef::Const(Const::Num(1))),
                     create_bin_op(
                         BinOp::Num(NumOp::Mul),
                         Expr::new(ExprDef::Local(String::from("d"))),
                         create_bin_op(
                             BinOp::Num(NumOp::Sub),
                             Expr::new(ExprDef::Local(String::from("b"))),
-                            Expr::new(ExprDef::Const(Const::Num(3.0))),
+                            Expr::new(ExprDef::Const(Const::Num(3))),
                         ),
                     ),
                 ),
