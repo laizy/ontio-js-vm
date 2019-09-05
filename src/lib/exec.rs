@@ -389,7 +389,7 @@ impl InterpreterBuilder {
         array::init(&global);
         function::init(&global);
         json::init(&global);
-        regexp::init(&global);
+//        regexp::init(&global);
         string::init(&global);
 
         Self { global }

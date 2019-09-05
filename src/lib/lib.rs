@@ -42,15 +42,8 @@ use crate::{
     exec::{Executor, Interpreter},
     syntax::{ast::expr::Expr, lexer::Lexer, parser::Parser},
 };
-use wasm_bindgen::prelude::*;
 
-#[wasm_bindgen]
-extern "C" {
-    // Use `js_namespace` here to bind `console.log(..)` instead of just
-    // `log(..)`
-    #[wasm_bindgen(js_namespace = console)]
-    fn log(s: &str);
-}
+use ontio_std::console;
 
 fn parser_expr(src: &str) -> Expr {
     let mut lexer = Lexer::new(src);
@@ -77,12 +70,12 @@ pub fn exec(src: &str) -> String {
     forward(&mut engine, src)
 }
 
-#[wasm_bindgen]
+#[no_mangle]
 pub fn evaluate(src: &str) -> String {
     let mut lexer = Lexer::new(&src);
     match lexer.lex() {
         Ok(_v) => (),
-        Err(v) => log(&v.to_string()),
+        Err(v) => console::debug(&v.to_string()),
     }
 
     let tokens = lexer.tokens;
@@ -95,7 +88,7 @@ pub fn evaluate(src: &str) -> String {
             expr = v;
         }
         Err(_v) => {
-            log("parsing fail");
+            console::debug("parsing fail");
             return String::from("parsing failed");
         }
     }
@@ -105,7 +98,7 @@ pub fn evaluate(src: &str) -> String {
     match result {
         Ok(v) => v.to_string(),
         Err(v) => {
-            log(&format!("{} {}", "asudihsiu", v.to_string()));
+            console::debug(&format!("{} {}", "asudihsiu", v.to_string()));
             format!("{}: {}", "error", v.to_string())
         }
     }
