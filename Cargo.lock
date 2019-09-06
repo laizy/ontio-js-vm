@@ -422,7 +422,7 @@ dependencies = [
 [[package]]
 name = "ontio-codegen"
 version = "0.1.0"
-source = "git+https://github.com/ontio/ontology-wasm-cdt-rust#4b6f3e5bc13f401ff0239d179073ced24f0156d0"
+source = "git+https://github.com/ontio/ontology-wasm-cdt-rust#b660f17e2d97575d6d044fcce53d9f50917f6290"
 dependencies = [
  "num 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "proc-macro2 1.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -434,7 +434,7 @@ dependencies = [
 [[package]]
 name = "ontio-derive-codec"
 version = "0.1.0"
-source = "git+https://github.com/ontio/ontology-wasm-cdt-rust#4b6f3e5bc13f401ff0239d179073ced24f0156d0"
+source = "git+https://github.com/ontio/ontology-wasm-cdt-rust#b660f17e2d97575d6d044fcce53d9f50917f6290"
 dependencies = [
  "proc-macro2 1.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "quote 1.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -444,7 +444,7 @@ dependencies = [
 [[package]]
 name = "ontio-std"
 version = "0.1.0"
-source = "git+https://github.com/ontio/ontology-wasm-cdt-rust#4b6f3e5bc13f401ff0239d179073ced24f0156d0"
+source = "git+https://github.com/ontio/ontology-wasm-cdt-rust#b660f17e2d97575d6d044fcce53d9f50917f6290"
 dependencies = [
  "bigint 4.4.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "byteorder 1.3.2 (registry+https://github.com/rust-lang/crates.io-index)",

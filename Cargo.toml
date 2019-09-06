@@ -1,5 +1,5 @@
 [package]
-name = "Boa"
+name = "boa"
 version = "0.3.0"
 authors = ["Jason Williams <jase.williams@gmail.com>"]
 description = "Boa is a Javascript lexer, parser and Just-in-Time compiler written in Rust. Currently, it has support for some of the language."
@@ -12,7 +12,7 @@ edition = "2018"
 
 
 [dependencies]
-gc = {path="./gc-0.3.3"}
+gc = {path="./gc"}
 gc_derive = "^0.3.2"
 #serde_json = "^1.0.40"
 rand = "^0.7.0"

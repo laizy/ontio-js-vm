@@ -96,7 +96,7 @@ pub fn invoke() {
 fn testcase() -> String {
     r#"
     [
-        [{"method":"evaluate", "param":"string:1+2", "expected":"string:3"},
+        [{"method":"evaluate", "param":"string:1+2", "expected":"string:3"}
         ]
     ]
         "#
