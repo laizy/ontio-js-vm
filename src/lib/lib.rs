@@ -44,7 +44,7 @@ use crate::{
 };
 
 use ontio_std::{
-    abi::{Sink, ZeroCopySource},
+    abi::{Sink, Source},
     console,
     prelude::*,
     runtime,
@@ -78,7 +78,7 @@ pub fn exec(src: &str) -> String {
 #[no_mangle]
 pub fn invoke() {
     let input = runtime::input();
-    let mut source = ZeroCopySource::new(&input);
+    let mut source = Source::new(&input);
     let action: &[u8] = source.read().unwrap();
     let mut sink = Sink::new(12);
     match action {

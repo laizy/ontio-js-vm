@@ -24,6 +24,7 @@ features=["std"]
 
 [dependencies.ontio-std]
 git="https://github.com/ontio/ontology-wasm-cdt-rust"
+rev="bf3eea0dca0974165872f6a26f0d4b0374124789"
 features = ["std"]
 
 [dev-dependencies]
